@@ -1,0 +1,5 @@
+krankheiten = [
+    "Hufrehe",
+    "Mauke",
+    "Sommerekzem"
+]
