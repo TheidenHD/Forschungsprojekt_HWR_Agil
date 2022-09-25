@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer
 from sqlalchemy.orm import relationship
-from main.database_context import database
+from ..database_context import database
 
 class Race(database.table_base):
     __tablename__ = 'Race'

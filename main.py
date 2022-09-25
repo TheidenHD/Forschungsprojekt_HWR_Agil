@@ -2,34 +2,36 @@ import os
 import importlib
 from main.crawlers.crawler import Crawler
 
-from enums.scan_interval import ScanInterval
 from main.database_context import database
-from models.disease import Disease
-from models.disease_name import DiseaseName
-from models.found import Found
-from models.hit import Hit
-from models.race import Race
-from models.race_name import RaceName
-from models.scan import Scan
+from main.models.disease import Disease
+from main.models.disease_name import DiseaseName
+from main.models.found import Found
+from main.models.hit import Hit
+from main.models.race import Race
+from main.models.race_name import RaceName
+from main.models.scan import Scan
 from datetime import date
-from models.search import Search
-from models.source import Source
+from main.models.search import Search
+from main.models.source import Source
 
-for root, dirs, files in os.walk('main\crawlers'):
-    dirs[:] = [d for d in dirs if not d.startswith('_')]
-    files[:] = [f for f in files if f.endswith('_main.py')]
+def Main(interval: int):
+    session = database.create_session()
+    for root, dirs, files in os.walk('main\crawlers'):
+        dirs[:] = [d for d in dirs if not d.startswith('_')]
+        files[:] = [f for f in files if f.endswith('_main.py')]
 
-    for file in files:
-        importlib.import_module(os.path.join(root, file).replace('\\','.')[:-3])
+        for file in files:
+            importlib.import_module(os.path.join(root, file).replace('\\','.')[:-3])
 
-for x in Crawler.__subclasses__():
-  print(x().crawl())
+    scan = Scan(date=date.today(), interval=30)
+    for x in Crawler.__subclasses__():
+        print(x().crawl(session, scan))
 
 def create_demo_data():
     disease = Disease(id=0)
     found = Found(id=1)
     race = Race(id=3)
-    scan = Scan(id=4, date=date.today(), interval=ScanInterval.AllTime)
+    scan = Scan(id=4, date=date.today(), interval=30)
     source = Source(id=5, name="TestSource", url="www.TestSource.com")
     search = Search(id=6, weight=7)
     disease_name = DiseaseName(id=8, name="TestDisease")
