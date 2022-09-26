@@ -23,4 +23,22 @@ class Crawler(ABC):
         pass
     
     def crawl(self, session, scan: Scan):
-        return [self.name, self.adresse, self.multiplicator, self.a_crawl(session.query(Race).all(), session.query(Disease).all(), Scan.interval)]
+        temp = session.query(Source).filter_by(url=self.adresse)
+        source = None
+
+        if temp.first() is not None:
+            source = temp.first()
+        else:
+            source = Source(name=self.name, url=self.adresse)
+            session.add(source)
+
+        search = Search(weight=self.multiplicator, scan=scan, source=source)
+        session.add(search)
+
+        for data in self.a_crawl(session.query(Race).all(), session.query(Disease).all(), Scan.interval):
+                found = Found(race=data[0], search=search)
+                session.add(found)
+
+                for disease, amount in data[1].items():
+                    hit = Hit(disease=disease, amount=amount, found=found)
+                    session.add(hit)

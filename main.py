@@ -24,25 +24,33 @@ def Main(interval: int):
             importlib.import_module(os.path.join(root, file).replace('\\','.')[:-3])
 
     scan = Scan(date=date.today(), interval=30)
+    session.add(scan)
     for x in Crawler.__subclasses__():
         print(x().crawl(session, scan))
+    database.commit_session(session)
 
 def create_demo_data():
-    disease = Disease(id=0)
-    found = Found(id=1)
-    race = Race(id=3)
-    scan = Scan(id=4, date=date.today(), interval=30)
-    source = Source(id=5, name="TestSource", url="www.TestSource.com")
-    search = Search(id=6, weight=7)
-    disease_name = DiseaseName(id=8, name="TestDisease")
-    race_name = RaceName(id=9, name="TestRace")
-    hit = Hit(id=10, amount=2)
+    disease = Disease()
+    disease2 = Disease()
+    found = Found()
+    race = Race()
+    race2 = Race()
+    scan = Scan(date=date.today(), interval=30)
+    source = Source(name="TestSource", url="www.TestSource.com")
+    search = Search(weight=7)
+    disease_name = DiseaseName(name="TestDisease")
+    disease_name2 = DiseaseName(name="TestDisease2")
+    race_name = RaceName(name="TestRace")
+    race_name2 = RaceName(name="TestRace2")
+    hit = Hit(amount=2)
 
     disease_name.disease = disease
+    disease_name2.disease = disease2
     hit.disease = disease
     hit.found = found
     found.race = race
     race_name.race = race
+    race_name2.race = race2
     found.search = search
     search.source = source
     search.scan = scan
@@ -50,10 +58,14 @@ def create_demo_data():
     session = database.create_session()
     session.add(disease)
     session.add(disease_name)
+    session.add(disease2)
+    session.add(disease_name2)
     session.add(found)
     session.add(hit)
     session.add(race)
     session.add(race_name)
+    session.add(race2)
+    session.add(race_name2)
     session.add(scan)
     session.add(source)
     session.add(scan)
@@ -61,5 +73,5 @@ def create_demo_data():
 
 def read_demo_data():
     session = database.create_session()
-    f = session.query(Found).first()
-    f.id
+    f = session.query(Found).count()
+    print(f)
