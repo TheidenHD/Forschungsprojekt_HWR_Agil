@@ -30,48 +30,32 @@ def Main(interval: int):
     database.commit_session(session)
 
 def create_demo_data():
-    disease = Disease()
-    disease2 = Disease()
-    found = Found()
-    race = Race()
-    race2 = Race()
-    scan = Scan(date=date.today(), interval=30)
-    source = Source(name="TestSource", url="www.TestSource.com")
-    search = Search(weight=7)
-    disease_name = DiseaseName(name="TestDisease")
-    disease_name2 = DiseaseName(name="TestDisease2")
-    race_name = RaceName(name="TestRace")
-    race_name2 = RaceName(name="TestRace2")
-    hit = Hit(amount=2)
+    # Assumes that the database was filled with the scripts "diseases.sql" and "races.sql" in main/database/scripts
+    session = database.create_session()
+    disease = session.query(Disease).first()
+    race = session.query(Race).first()
 
-    disease_name.disease = disease
-    disease_name2.disease = disease2
+    found = Found(id=0)
+    scan = Scan(id=0, date=date.today(), interval=30)
+    source = Source(id=0, name="TestSource", url="www.TestSource.com")
+    search = Search(id=0, weight=7)
+    hit = Hit(id=0, amount=2)
+
     hit.disease = disease
     hit.found = found
     found.race = race
-    race_name.race = race
-    race_name2.race = race2
     found.search = search
     search.source = source
     search.scan = scan
 
-    session = database.create_session()
-    session.add(disease)
-    session.add(disease_name)
-    session.add(disease2)
-    session.add(disease_name2)
     session.add(found)
-    session.add(hit)
-    session.add(race)
-    session.add(race_name)
-    session.add(race2)
-    session.add(race_name2)
     session.add(scan)
     session.add(source)
-    session.add(scan)
+    session.add(search)
+    session.add(hit)
     database.commit_session(session)
 
 def read_demo_data():
     session = database.create_session()
-    f = session.query(Found).count()
+    f = session.query(Found).first()
     print(f)
