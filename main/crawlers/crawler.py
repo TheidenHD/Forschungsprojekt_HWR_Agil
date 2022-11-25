@@ -41,5 +41,5 @@ class Crawler(ABC):
                 session.add(found)
 
                 for disease, amount in data[1].items():
-                    hit = Hit(disease=disease, amount=amount, found=found)
+                    hit = Hit(disease=disease, amount=int(amount), found=found)
                     session.add(hit)
