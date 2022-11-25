@@ -19,14 +19,14 @@ def Main(interval: int):
     for root, dirs, files in os.walk('main\crawlers'):
         dirs[:] = [d for d in dirs if not d.startswith('_')]
         files[:] = [f for f in files if f.endswith('_main.py')]
-
         for file in files:
             importlib.import_module(os.path.join(root, file).replace('\\','.')[:-3])
 
-    scan = Scan(date=date.today(), interval=30)
+    scan = Scan(date=date.today(), interval=interval)
     session.add(scan)
+    
     for x in Crawler.__subclasses__():
-        print(x().crawl(session, scan))
+        x().crawl(session, scan)
     database.commit_session(session)
 
 def create_demo_data():
@@ -59,3 +59,6 @@ def read_demo_data():
     session = database.create_session()
     f = session.query(Found).first()
     print(f)
+
+if __name__ == "__main__":
+    Main(30)

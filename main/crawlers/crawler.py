@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
+from datetime import date, timedelta
 from ..models.disease import  Disease
 from ..models.disease_name import DiseaseName
 from ..models.found import Found
@@ -19,7 +20,7 @@ class Crawler(ABC):
         self.multiplicator = multiplicator
 
     @abstractmethod
-    def a_crawl(self, races: List[Race], diseases: List[Disease], interval: int):
+    def a_crawl(self, races: List[Race], diseases: List[Disease], scan: Scan):
         pass
     
     def crawl(self, session, scan: Scan):
@@ -35,7 +36,7 @@ class Crawler(ABC):
         search = Search(weight=self.multiplicator, scan=scan, source=source)
         session.add(search)
 
-        for data in self.a_crawl(session.query(Race).all(), session.query(Disease).all(), Scan.interval):
+        for data in self.a_crawl(session.query(Race).all(), session.query(Disease).all(), scan):
                 found = Found(race=data[0], search=search)
                 session.add(found)
 
