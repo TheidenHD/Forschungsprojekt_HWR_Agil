@@ -12,10 +12,10 @@
 ![Datenbankschema](Bilder/Datenbank_Entwurf_Englisch_2.png)
 
 ### ![circle](Bilder/circle.svg) Datengrundlage:
-Von Hand angelegte Tabellen deren Daten vom Programm zur Ausführung genutzt werden
+Von Hand angelegte Tabellen deren Daten vom Programm zur Ausführung genutzt werden.
 
 ### ![circle](Bilder/circle2.svg) Programmdaten:
-Vom Programm angelegte Tabellen in denen das Programm die Ergebnisse hinterlegt
+Vom Programm angelegte Tabellen in denen das Programm die Ergebnisse hinterlegt.
 
 ## Erklärung:
 Bei jedem Durchlauf des Programmes wird ein Eintrag in der <em>Scan</em>-Tabelle angelegt mit dem
@@ -32,7 +32,7 @@ der <em>Found</em>-Tabelle angelegt. Für jede zur Rasse gefundenen Krankheit au
 ein Eintrag in der <em>Hit</em>-Tabelle angelegt mit der Anzahl der gefunden Vorkommen der Krankheit bei
 dieser Rasse.<br>
 
-Die beiden Tabellen <em>RaceName</em>- und <em>DiseaseName</em>-Tabelle halten die eigentlichen Namen der <em>Race</em> und <em>Disease-</em>Tabelle, da es für viele Rassen und Krankheiten mehrere Bezeichnungen gibt. Die <em>Race</em> und <em>Diesase</em>-Tabelle gruppieren diese Namen also eigentlich nur über die Id.
+Die beiden Tabellen <em>RaceName</em> und <em>DiseaseName</em> halten die eigentlichen Namen der Tabellen <em>Race</em> und <em>Disease</em>, da es für viele Rassen und Krankheiten mehrere Bezeichnungen gibt. Die Tabellen <em>Race</em> und <em>Diesase</em> gruppieren diese Namen also eigentlich nur über die Id.
 
 ## Schnittstelle zur Datenbank:
 Als Schnittstelle zur Datenbank wird die Objektrelationale Abbildung von <em>SQLAlchemy</em> genutzt. Es gibt
