@@ -12,7 +12,7 @@
 ![Datenbankschema](Bilder/Datenbank_Entwurf_Englisch_2.png)
 
 ### ![circle](Bilder/circle.svg) Datengrundlage:
-Von Hand angelegte Tabellen deren Daten vom Programm zur Ausführung genutzt werden.
+Von Hand angelegte Tabellen deren Daten vom Programm zur Ausführung genutzt werden. Diese tabellen werden über die Skripts in <em>/main/database/scripts/</em> mit Daten befüllt.
 
 ### ![circle](Bilder/circle2.svg) Programmdaten:
 Vom Programm angelegte Tabellen in denen das Programm die Ergebnisse hinterlegt.
