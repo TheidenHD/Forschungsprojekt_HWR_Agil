@@ -11,10 +11,10 @@
 
 ![Datenbankschema](Bilder/Datenbank_Entwurf_Englisch_2.png)
 
-### <div style="border: 2px solid black; background-color: #E3C800; height: 21px;border-radius:50%; width: 21px; display: inline-block; margin-right: 5px; margin-bottom: -5px;"></div>Datengrundlage:
+### ![circle](Bilder/circle.svg) Datengrundlage:
 Von Hand angelegte Tabellen deren Daten vom Programm zur Ausführung genutzt werden
 
-### <div style="border: 2px solid black; background-color: #FA6800; height: 21px;border-radius:50%; width: 21px; display: inline-block; margin-right: 5px; margin-bottom: -5px;"></div>Programmdaten:
+### ![circle](Bilder/circle2.svg) Programmdaten:
 Vom Programm angelegte Tabellen in denen das Programm die Ergebnisse hinterlegt
 
 ## Erklärung:
