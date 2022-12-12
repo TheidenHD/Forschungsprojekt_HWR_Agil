@@ -3,7 +3,7 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 class DatabaseContext:
-    database_engine = create_engine('sqlite:///database/Pferdekrankheiten.db')
+    database_engine = create_engine('sqlite:///main/database/Pferdekrankheiten.db')
     database_session = sessionmaker(bind=database_engine)
     table_base = declarative_base()
 

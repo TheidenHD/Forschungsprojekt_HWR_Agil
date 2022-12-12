@@ -19,47 +19,46 @@ def Main(interval: int):
     for root, dirs, files in os.walk('main\crawlers'):
         dirs[:] = [d for d in dirs if not d.startswith('_')]
         files[:] = [f for f in files if f.endswith('_main.py')]
-
         for file in files:
             importlib.import_module(os.path.join(root, file).replace('\\','.')[:-3])
 
-    scan = Scan(date=date.today(), interval=30)
+    scan = Scan(date=date.today(), interval=interval)
+    session.add(scan)
+    
     for x in Crawler.__subclasses__():
-        print(x().crawl(session, scan))
+        x().crawl(session, scan)
+    database.commit_session(session)
 
 def create_demo_data():
-    disease = Disease(id=0)
-    found = Found(id=1)
-    race = Race(id=3)
-    scan = Scan(id=4, date=date.today(), interval=30)
-    source = Source(id=5, name="TestSource", url="www.TestSource.com")
-    search = Search(id=6, weight=7)
-    disease_name = DiseaseName(id=8, name="TestDisease")
-    race_name = RaceName(id=9, name="TestRace")
-    hit = Hit(id=10, amount=2)
+    # Assumes that the database was filled with the scripts "diseases.sql" and "races.sql" in main/database/scripts
+    session = database.create_session()
+    disease = session.query(Disease).first()
+    race = session.query(Race).first()
 
-    disease_name.disease = disease
+    found = Found(id=0)
+    scan = Scan(id=0, date=date.today(), interval=30)
+    source = Source(id=0, name="TestSource", url="www.TestSource.com")
+    search = Search(id=0, weight=7)
+    hit = Hit(id=0, amount=2)
+
     hit.disease = disease
     hit.found = found
     found.race = race
-    race_name.race = race
     found.search = search
     search.source = source
     search.scan = scan
 
-    session = database.create_session()
-    session.add(disease)
-    session.add(disease_name)
     session.add(found)
-    session.add(hit)
-    session.add(race)
-    session.add(race_name)
     session.add(scan)
     session.add(source)
-    session.add(scan)
+    session.add(search)
+    session.add(hit)
     database.commit_session(session)
 
 def read_demo_data():
     session = database.create_session()
     f = session.query(Found).first()
-    f.id
+    print(f)
+
+if __name__ == "__main__":
+    Main(30)
