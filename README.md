@@ -7,6 +7,21 @@
     <li>SQLAlchemy</li>
 </ul>
 
+## Abhängigkeiten
+### Programm
+```console
+pip install sqlalchemy
+```
+### Google Trends Crawler
+```console
+pip install pytrends
+```
+### Pferd.de Crawler
+```console
+pip install requests
+pip install beautifulsoup4
+```
+
 ## Datenbankschema
 
 ![Datenbankschema](Bilder/Datenbank_Entwurf_Englisch_2.png)
@@ -40,8 +55,74 @@ und beinhalten Variablen für die Werte in den Spalten, sowie Verweise auf ander
 Beziehung stehen.
 
 ### Beispiele
-#### Die Modellklasse der Hit-Tabelle:
-![Modellklasse](Bilder/Modellklasse_Hit.png)
+#### Die Modellklasse der Hit-Tabelle
+```python
+from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+from ..database_context import database
+
+class Hit(database.table_base):
+    __tablename__ = 'Hit'
+
+    #Spalten
+    id = Column(Integer, primary_key=True)
+    amount = Column(Integer)
+    disease_id = Column(Integer, ForeignKey('Disease.id'))
+
+    #Verweise auf andere Einträge (Basierend auf ForeignKeys)
+    found_id = Column(Integer, ForeignKey('Found.id'))
+    found = relationship("Found", back_populates="hits")
+    disease = relationship("Disease", back_populates="hits")
+```
 
 #### Einträge von der Datenbank abrufen und neu hinzufügen
-![Datenbank](Bilder/Datenbank_Demo_Daten.png)
+```python
+def create_demo_data():
+    #Erstellen einer Session zum Bearbeiten der Datenbank
+    session = database.create_session()
+
+    #Abrufen von Einträgen von der Datenbank
+    disease = session.query(Disease).first()
+    race = session.query(Race).first()
+
+    #Erstellen von neuen Einträgen
+    found = Found(id=0)
+    scan = Scan(id=0, date=date.today(), interval=30)
+    source = Source(id=0, name="TestSource", url="www.TestSource.com")
+    search = Search(id=0, weight=7)
+    hit = Hit(id=0, amount=2)
+
+    #Verweise zu anderen Einträgen hinzufügen
+    hit.disease = disease
+    hit.found = found
+    found.race = race
+    found.search = search
+    search.source = source
+    search.scan = scan
+
+    #Hinzufügen von Änderungen zur Session
+    session.add(found)
+    session.add(scan)
+    session.add(source)
+    session.add(search)
+    session.add(hit)
+
+    #Änderungen der Session auf die Datenbank übertragen
+    database.commit_session(session)
+```
+
+## Neuen Crawler erstellen
+Für einen neuen Crawler kann die Vorlage verwendet werden.<br>
+Der Ordner in dem ein Crawler liegt muss im <em>main\crawlers</em> Ordner liegen un darf nicht mit "_" anfangen.
+Des Weiteren muss die Hauptdatei auf "_main.py" enden.
+```python
+from ..crawler import  *
+
+class Example(Crawler):
+
+    def __init__(self):
+       super().__init__("Example","www.example.de",1)
+
+    def a_crawl(self, races: List[Race], diseases: List[Disease], scan: Scan):              
+        return [[races[0], dict.fromkeys(diseases, 5)], [races[1], dict.fromkeys(diseases, 6)]]
+```
